@@ -4,6 +4,8 @@ import Navbar from '../components/Navbar';
 import api from '../services/api';
 import Sidebar from '../components/Sidebar';
 import Chart2D from '../components/Chart2D';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 
 const AdminPanel = () => {
   const [stats, setStats] = useState(null);
@@ -125,6 +127,23 @@ const AdminPanel = () => {
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleString();
+  };
+
+  const handleDownloadChart = async (upload, type) => {
+    // Find the chart container for this upload
+    const chartContainer = document.getElementById(`chart-preview-${upload._id}`);
+    if (!chartContainer) return;
+    const dataUrl = await toPng(chartContainer);
+    if (type === 'png') {
+      const link = document.createElement('a');
+      link.download = `${upload.originalName}-chart.png`;
+      link.href = dataUrl;
+      link.click();
+    } else if (type === 'pdf') {
+      const pdf = new jsPDF();
+      pdf.addImage(dataUrl, 'PNG', 10, 10, 180, 100);
+      pdf.save(`${upload.originalName}-chart.pdf`);
+    }
   };
 
   return (
@@ -350,39 +369,63 @@ const AdminPanel = () => {
                   <ul className="divide-y divide-gray-200">
                     {filteredUploads.map((upload) => (
                       <li key={upload._id} className="p-4 md:p-6">
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-                          <div className="flex items-center space-x-4">
-                            <div className="flex-shrink-0">
-                              <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                              </svg>
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0 w-full">
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-gray-900">{upload.originalName}</div>
+                            <div className="text-sm text-gray-500">
+                              Uploaded by {upload.user?.username || 'Unknown'}
                             </div>
-                            <div>
-                              <div className="text-sm font-medium text-gray-900">{upload.originalName}</div>
-                              <div className="text-sm text-gray-500">
-                                Uploaded by: {upload.user?.username || 'Unknown user'}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                Size: {formatFileSize(upload.fileSize)} | Type: {upload.fileType}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                Uploaded: {formatDate(upload.createdAt)}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                Status: <span className={`font-medium ${upload.status === 'completed' ? 'text-green-600' : upload.status === 'failed' ? 'text-red-600' : 'text-yellow-600'}`}>
-                                  {upload.status}
-                                </span>
-                              </div>
+                            <div className="text-sm text-gray-500">
+                              Size: {formatFileSize(upload.fileSize)} | Type: {upload.fileType}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Uploaded: {formatDate(upload.createdAt)}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Status: <span className={`font-medium ${
+                                upload.status === 'completed' ? 'text-green-600' :
+                                upload.status === 'failed' ? 'text-red-600' :
+                                'text-yellow-600'
+                              }`}>
+                                {upload.status}
+                              </span>
+                              {upload.status === 'failed' && upload.error && (
+                                <span className="ml-2 text-red-500">({upload.error})</span>
+                              )}
                             </div>
                           </div>
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => handleDeleteUpload(upload._id)}
-                              className="px-3 py-1 border border-red-600 text-red-600 rounded-md bg-white hover:bg-red-50 hover:text-red-800 transition-colors duration-150"
-                            >
-                              Delete
-                            </button>
+                          <div className="flex-1 flex flex-col items-center justify-center">
+                            {upload.analysisResults && Array.isArray(upload.analysisResults.data) && upload.analysisResults.data.length > 0 ? (
+                              <div id={`chart-preview-${upload._id}`}>
+                                <Chart2D
+                                  type="bar"
+                                  data={upload.analysisResults.data}
+                                  xAxis="Category"
+                                  yAxis="Value"
+                                />
+                              </div>
+                            ) : (
+                              <div className="text-gray-400 text-sm italic">No chart available for this file.</div>
+                            )}
                           </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          {upload.analysisResults && Array.isArray(upload.analysisResults.data) && upload.analysisResults.data.length > 0 && (
+                            <>
+                              <button
+                                onClick={() => handleDownloadChart(upload, 'png')}
+                                className="px-3 py-1 border border-green-600 text-green-600 rounded-md bg-white hover:bg-green-50 hover:text-green-800 transition-colors duration-150"
+                              >
+                                Download as PNG
+                              </button>
+                              <button
+                                onClick={() => handleDownloadChart(upload, 'pdf')}
+                                className="px-3 py-1 border border-blue-600 text-blue-600 rounded-md bg-white hover:bg-blue-50 hover:text-blue-800 transition-colors duration-150"
+                              >
+                                Download as PDF
+                              </button>
+                            </>
+                          )}
                         </div>
                       </li>
                     ))}

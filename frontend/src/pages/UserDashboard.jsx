@@ -9,6 +9,8 @@ import Chart3D from '../components/Chart3D';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSettings, resetSettings } from '../redux/dashboardSlice';
 import settingsService from '../services/settingsService';
+import { toPng } from 'html-to-image';
+import jsPDF from 'jspdf';
 
 export default function UserDashboard() {
   const dispatch = useDispatch();
@@ -95,6 +97,23 @@ export default function UserDashboard() {
 
   const handleUploadSuccess = () => {
     setRefreshUploads(prev => !prev);
+  };
+
+  // Download handlers for 3D chart
+  const handleDownload3DChart = async (type) => {
+    const chartContainer = document.getElementById('chart3d-container');
+    if (!chartContainer) return;
+    const dataUrl = await toPng(chartContainer);
+    if (type === 'png') {
+      const link = document.createElement('a');
+      link.download = `3d-chart-${Date.now()}.png`;
+      link.href = dataUrl;
+      link.click();
+    } else if (type === 'pdf') {
+      const pdf = new jsPDF();
+      pdf.addImage(dataUrl, 'PNG', 10, 10, 180, 100);
+      pdf.save(`3d-chart-${Date.now()}.pdf`);
+    }
   };
 
   return (
@@ -266,12 +285,28 @@ export default function UserDashboard() {
                 </div>
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">3D Visualization</h3>
-                  <Chart3D
-                    type="column"
-                    data={stats.recentActivity}
-                    xAxis="date"
-                    yAxis="count"
-                  />
+                  <div id="chart3d-container">
+                    <Chart3D
+                      type="column"
+                      data={stats.recentActivity}
+                      xAxis="date"
+                      yAxis="count"
+                    />
+                  </div>
+                  <div className="flex gap-4 mt-4">
+                    <button
+                      onClick={() => handleDownload3DChart('png')}
+                      className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
+                    >
+                      Download 3D Chart (PNG)
+                    </button>
+                    <button
+                      onClick={() => handleDownload3DChart('pdf')}
+                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    >
+                      Download 3D Chart (PDF)
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             )}
