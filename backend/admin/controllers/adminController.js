@@ -154,10 +154,27 @@ export const getStats = async (req, res) => {
       { $group: { _id: null, total: { $sum: '$fileSize' } } }
     ]);
 
+    // Uploads Over Time (last 30 days)
+    const uploadsOverTimeAgg = await Upload.aggregate([
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } },
+      { $limit: 30 }
+    ]);
+    const uploadsOverTime = uploadsOverTimeAgg.map(item => ({
+      date: item._id,
+      count: item.count
+    }));
+
     res.json({
       totalUsers,
       totalUploads,
-      totalStorage: totalStorage[0]?.total || 0
+      totalStorage: totalStorage[0]?.total || 0,
+      uploadsOverTime
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -255,14 +255,15 @@ const AdminPanel = () => {
               </div>
 
               {/* Charts */}
-              <div className="bg-white rounded-lg shadow p-4 md:p-6">
+              <div className="bg-white rounded-lg shadow p-4 md:p-6 overflow-x-auto">
                 <h2 className="text-lg font-semibold mb-4">Uploads Over Time</h2>
-                <div className="h-64 md:h-96">
+                <div className="min-w-[350px] h-64 md:h-96 flex items-center justify-center">
                   <Chart2D
                     type="line"
                     data={stats.uploadsOverTime || []}
                     xAxis="date"
                     yAxis="count"
+                    hideDownload
                   />
                 </div>
               </div>
@@ -307,13 +308,13 @@ const AdminPanel = () => {
                         <div className="flex space-x-2">
                           <button
                             onClick={() => handleEditUser(user)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="px-3 py-1 border border-blue-600 text-blue-600 rounded-md bg-white hover:bg-blue-50 hover:text-blue-800 transition-colors duration-150 mr-2"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteUser(user._id)}
-                            className="text-red-600 hover:text-red-900"
+                            className="px-3 py-1 border border-red-600 text-red-600 rounded-md bg-white hover:bg-red-50 hover:text-red-800 transition-colors duration-150"
                           >
                             Delete
                           </button>
@@ -377,7 +378,7 @@ const AdminPanel = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => handleDeleteUpload(upload._id)}
-                              className="text-red-600 hover:text-red-900"
+                              className="px-3 py-1 border border-red-600 text-red-600 rounded-md bg-white hover:bg-red-50 hover:text-red-800 transition-colors duration-150"
                             >
                               Delete
                             </button>
@@ -440,7 +441,7 @@ const AdminPanel = () => {
                           <div className="flex space-x-2">
                             <button
                               onClick={() => handleDeleteUpload(upload._id)}
-                              className="text-red-600 hover:text-red-900"
+                              className="px-3 py-1 border border-red-600 text-red-600 rounded-md bg-white hover:bg-red-50 hover:text-red-800 transition-colors duration-150"
                             >
                               Delete
                             </button>

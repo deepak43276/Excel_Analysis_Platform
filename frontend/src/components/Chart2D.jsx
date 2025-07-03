@@ -53,7 +53,7 @@ const DEFAULT_BORDERS = [
   'rgba(99, 132, 255, 1)'
 ];
 
-export default function Chart2D({ type, data, xAxis, yAxis }) {
+export default function Chart2D({ type, data, xAxis, yAxis, hideDownload }) {
   const chartRef = useRef(null);
 
   // Show a message if data is missing or empty
@@ -140,20 +140,22 @@ export default function Chart2D({ type, data, xAxis, yAxis }) {
       <div ref={chartRef} className="h-[400px]">
         {renderChart()}
       </div>
-      <div className="flex gap-4 mt-4">
-        <button
-          onClick={handleDownload}
-          className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
-        >
-          Download Chart (PNG)
-        </button>
-        <button
-          onClick={handleDownloadPDF}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        >
-          Download Chart (PDF)
-        </button>
-      </div>
+      {!hideDownload && (
+        <div className="flex gap-4 mt-4">
+          <button
+            onClick={handleDownload}
+            className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700"
+          >
+            Download Chart (PNG)
+          </button>
+          <button
+            onClick={handleDownloadPDF}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+          >
+            Download Chart (PDF)
+          </button>
+        </div>
+      )}
     </div>
   );
 }
