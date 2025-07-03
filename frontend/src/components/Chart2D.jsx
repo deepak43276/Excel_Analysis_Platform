@@ -27,6 +27,32 @@ ChartJS.register(
   Legend
 );
 
+// Define a default color palette
+const DEFAULT_COLORS = [
+  'rgba(75, 192, 192, 0.7)',    // teal
+  'rgba(255, 99, 132, 0.7)',    // red
+  'rgba(54, 162, 235, 0.7)',    // blue
+  'rgba(255, 206, 86, 0.7)',    // yellow
+  'rgba(153, 102, 255, 0.7)',   // purple
+  'rgba(255, 159, 64, 0.7)',    // orange
+  'rgba(99, 255, 132, 0.7)',    // green
+  'rgba(199, 199, 199, 0.7)',   // grey
+  'rgba(255, 99, 255, 0.7)',    // pink
+  'rgba(99, 132, 255, 0.7)'     // indigo
+];
+const DEFAULT_BORDERS = [
+  'rgba(75, 192, 192, 1)',
+  'rgba(255, 99, 132, 1)',
+  'rgba(54, 162, 235, 1)',
+  'rgba(255, 206, 86, 1)',
+  'rgba(153, 102, 255, 1)',
+  'rgba(255, 159, 64, 1)',
+  'rgba(99, 255, 132, 1)',
+  'rgba(199, 199, 199, 1)',
+  'rgba(255, 99, 255, 1)',
+  'rgba(99, 132, 255, 1)'
+];
+
 export default function Chart2D({ type, data, xAxis, yAxis }) {
   const chartRef = useRef(null);
 
@@ -36,8 +62,12 @@ export default function Chart2D({ type, data, xAxis, yAxis }) {
       {
         label: yAxis,
         data: data.map(item => item[yAxis]),
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: type === 'pie' || type === 'bar'
+          ? data.map((_, i) => DEFAULT_COLORS[i % DEFAULT_COLORS.length])
+          : DEFAULT_COLORS[0],
+        borderColor: type === 'pie' || type === 'bar'
+          ? data.map((_, i) => DEFAULT_BORDERS[i % DEFAULT_BORDERS.length])
+          : DEFAULT_BORDERS[0],
         borderWidth: 1
       }
     ]
