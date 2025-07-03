@@ -3,18 +3,13 @@ import fs from 'fs/promises';
 
 export const processExcelFile = async (filePath, analysisType) => {
   try {
-    console.log('Starting Excel file processing for:', filePath);
     // Read the Excel file
     const workbook = xlsx.readFile(filePath);
-    console.log('Workbook read successfully.');
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
-    console.log('Worksheet obtained.');
     const data = xlsx.utils.sheet_to_json(worksheet);
-    console.log(`Converted sheet to JSON. ${data.length} rows found.`);
 
     if (!data.length) {
-      console.log('No data found in worksheet.');
       // Instead of throwing an error here, return an empty analysis result
       // This allows the upload record to still be marked as completed, but with empty results
       return { data: [], columns: [], analysis: { error: 'No data found in the file' } };
@@ -25,16 +20,13 @@ export const processExcelFile = async (filePath, analysisType) => {
       name: col,
       type: typeof data[0][col]
     }));
-    console.log('Columns identified:', columns.map(c => c.name));
 
     // Perform analysis based on type
-    console.log('Performing analysis for type:', analysisType);
     const results = {
       basic: await performBasicAnalysis(data),
       advanced: await performAdvancedAnalysis(data),
       custom: await performCustomAnalysis(data)
     }[analysisType];
-    console.log('Analysis results generated.');
 
     // Ensure data is included in results
     const finalResults = {
@@ -42,13 +34,11 @@ export const processExcelFile = async (filePath, analysisType) => {
       columns,
       data // Always include the raw data
     };
-    console.log('Final results prepared.');
 
     // Clean up the file - this should ideally be handled by the caller (uploadController.js)
     // but keeping it here for now as per existing logic, with a console log for clarity
     try {
       await fs.unlink(filePath);
-      console.log('Temporary file deleted successfully.');
     } catch (unlinkError) {
       console.error('Error deleting temporary file:', unlinkError);
     }

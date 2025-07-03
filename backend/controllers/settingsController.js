@@ -80,7 +80,6 @@ export const updateSetting = async (req, res) => {
     user.settings[category][setting] = value;
     await user.save();
     
-    console.log('Setting updated successfully:', { category, setting, value });
     res.json(user.settings);
   } catch (error) {
     console.error('Error in updateSetting:', error);

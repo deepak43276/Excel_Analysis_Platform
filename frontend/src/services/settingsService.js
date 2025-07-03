@@ -15,7 +15,7 @@ export const settingsService = {
   // Save user settings
   saveSettings: async (settings) => {
     try {
-      console.log('Saving settings:', settings);
+      // console.log('Saving settings:', settings);
       const response = await api.post('/settings', settings);
       return response.data;
     } catch (error) {
