@@ -6,8 +6,16 @@ import FileUpload from '../components/FileUpload';
 import UploadHistory from '../components/UploadHistory';
 import Chart2D from '../components/Chart2D';
 import Chart3D from '../components/Chart3D';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateSettings, resetSettings } from '../redux/dashboardSlice';
+import settingsService from '../services/settingsService';
 
 export default function UserDashboard() {
+  const dispatch = useDispatch();
+  const { settings } = useSelector((state) => state.dashboard);
+  const [localSettings, setLocalSettings] = useState(settings);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
   const [refreshUploads, setRefreshUploads] = useState(false);
   const [activeTab, setActiveTab] = useState('upload');
   const [stats, setStats] = useState({
@@ -30,6 +38,59 @@ export default function UserDashboard() {
     };
     fetchStats();
   }, [refreshUploads]);
+
+  useEffect(() => {
+    // Load settings when component mounts
+    const loadSettings = async () => {
+      try {
+        const userSettings = await settingsService.getSettings();
+        setLocalSettings(userSettings);
+      } catch (error) {
+        console.error('Error loading settings:', error);
+      }
+    };
+    loadSettings();
+  }, []);
+
+  const handleSettingChange = (category, setting, value) => {
+    setLocalSettings(prev => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [setting]: value
+      }
+    }));
+  };
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      await settingsService.saveSettings(localSettings);
+      dispatch(updateSettings(localSettings));
+      // Show success message
+      alert('Settings saved successfully!');
+    } catch (error) {
+      setSaveError('Failed to save settings. Please try again.');
+      console.error('Error saving settings:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleResetSettings = async () => {
+    if (window.confirm('Are you sure you want to reset all settings to default?')) {
+      try {
+        const defaultSettings = await settingsService.resetSettings();
+        setLocalSettings(defaultSettings);
+        dispatch(resetSettings());
+        // Show success message
+        alert('Settings reset to default!');
+      } catch (error) {
+        console.error('Error resetting settings:', error);
+      }
+    }
+  };
 
   const handleUploadSuccess = () => {
     setRefreshUploads(prev => !prev);
@@ -221,18 +282,146 @@ export default function UserDashboard() {
                 exit={{ opacity: 0 }}
                 className="space-y-6"
               >
+                {/* Account Settings */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Account Settings</h3>
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Email Notifications</label>
-                      <div className="mt-2">
+                      <div className="mt-2 space-y-2">
                         <label className="inline-flex items-center">
-                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <input
+                            type="checkbox"
+                            className="form-checkbox text-blue-600"
+                            checked={localSettings?.notifications?.emailNotifications || false}
+                            onChange={(e) => handleSettingChange('notifications', 'emailNotifications', e.target.checked)}
+                          />
                           <span className="ml-2">Receive email notifications for uploads</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox text-blue-600"
+                            checked={localSettings?.notifications?.weeklyReports || false}
+                            onChange={(e) => handleSettingChange('notifications', 'weeklyReports', e.target.checked)}
+                          />
+                          <span className="ml-2">Get weekly analytics reports</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox text-blue-600"
+                            checked={localSettings?.notifications?.storageAlerts || false}
+                            onChange={(e) => handleSettingChange('notifications', 'storageAlerts', e.target.checked)}
+                          />
+                          <span className="ml-2">Alert on storage limit threshold</span>
                         </label>
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                {/* Theme Customization */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Theme Customization</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Color Theme</label>
+                      <select
+                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                        value={localSettings?.theme?.colorTheme || 'light'}
+                        onChange={(e) => handleSettingChange('theme', 'colorTheme', e.target.value)}
+                      >
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="system">System</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Chart Color Palette</label>
+                      <select
+                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                        value={localSettings?.theme?.chartPalette || 'default'}
+                        onChange={(e) => handleSettingChange('theme', 'chartPalette', e.target.value)}
+                      >
+                        <option value="default">Default</option>
+                        <option value="vibrant">Vibrant</option>
+                        <option value="pastel">Pastel</option>
+                        <option value="monochrome">Monochrome</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Data Export Preferences */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Data Export Preferences</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Default Export Format</label>
+                      <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option>CSV</option>
+                        <option>Excel</option>
+                        <option>JSON</option>
+                        <option>PDF</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Auto-Export Settings</label>
+                      <div className="mt-2 space-y-2">
+                        <label className="inline-flex items-center">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Auto-export after analysis</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Include metadata in exports</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Automation Settings */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Automation Settings</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Scheduled Analysis</label>
+                      <div className="mt-2 space-y-2">
+                        <label className="inline-flex items-center">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Enable scheduled analysis</span>
+                        </label>
+                        <div className="ml-6">
+                          <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            <option>Daily</option>
+                            <option>Weekly</option>
+                            <option>Monthly</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Auto-Processing Rules</label>
+                      <div className="mt-2 space-y-2">
+                        <label className="inline-flex items-center">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Auto-process new uploads</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Generate default visualizations</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advanced Chart Settings */}
+                <div className="bg-white rounded-lg shadow-sm p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">Advanced Chart Settings</h3>
+                  <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Default Chart Type</label>
                       <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
@@ -240,10 +429,63 @@ export default function UserDashboard() {
                         <option>3D Column</option>
                         <option>Line Chart</option>
                         <option>Pie Chart</option>
+                        <option>Scatter Plot</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Chart Interactions</label>
+                      <div className="mt-2 space-y-2">
+                        <label className="inline-flex items-center">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Enable zoom and pan</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Show data labels</span>
+                        </label>
+                        <label className="inline-flex items-center block">
+                          <input type="checkbox" className="form-checkbox text-blue-600" />
+                          <span className="ml-2">Enable chart animations</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Data Aggregation</label>
+                      <select className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option>None</option>
+                        <option>Sum</option>
+                        <option>Average</option>
+                        <option>Count</option>
+                        <option>Custom</option>
                       </select>
                     </div>
                   </div>
                 </div>
+
+                {/* Save and Reset Buttons */}
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={handleResetSettings}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                  >
+                    Reset to Default
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveSettings}
+                    disabled={isSaving}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  >
+                    {isSaving ? 'Saving...' : 'Save Settings'}
+                  </button>
+                </div>
+
+                {saveError && (
+                  <div className="mt-4 text-sm text-red-600">
+                    {saveError}
+                  </div>
+                )}
               </motion.div>
             )}
           </div>

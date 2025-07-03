@@ -7,6 +7,7 @@ A full-stack web application for analyzing Excel files with user management and 
 - User authentication and authorization
 - Excel file upload and analysis
 - Basic and advanced data analysis
+
 - Admin dashboard with user management
 - File management system
 - Data visualization with charts
