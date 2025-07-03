@@ -160,11 +160,9 @@ export const deleteUpload = async (req, res) => {
 
 export const getUserStats = async (req, res) => {
   try {
-    // console.log('Fetching stats for user ID:', req.user?.id);
-    const stats = await Upload.aggregate([
-      {
-        $match: { user: new mongoose.Types.ObjectId(req.user.id) }
-      },
+    // Aggregate overall stats
+    const statsAgg = await Upload.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
       {
         $group: {
           _id: null,
@@ -179,31 +177,51 @@ export const getUserStats = async (req, res) => {
         }
       }
     ]);
+    const stats = statsAgg[0] || {
+      totalUploads: 0,
+      totalStorage: 0,
+      completedUploads: 0,
+      failedUploads: 0
+    };
 
-    // console.log('Aggregation results:', stats);
+    // Recent Activity: uploads per day (last 14 days)
+    const recentActivity = await Upload.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    // Format for frontend: [{ date, count }]
+    const formattedRecentActivity = recentActivity.map(item => ({ date: item._id, count: item.count }));
 
-    const recentUploads = await Upload.find({ user: req.user.id })
-      .sort({ createdAt: -1 })
-      .limit(5);
-
-    // console.log('Stats data being sent to frontend:', {
-    //   stats: stats[0] || {
-    //     totalUploads: 0,
-    //     totalStorage: 0,
-    //     completedUploads: 0,
-    //     failedUploads: 0
-    //   },
-    //   recentUploads
-    // });
+    // Storage Distribution: by fileType
+    const storageDistribution = await Upload.aggregate([
+      { $match: { user: new mongoose.Types.ObjectId(req.user.id) } },
+      {
+        $group: {
+          _id: "$fileType",
+          value: { $sum: "$fileSize" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label: "$_id",
+          value: 1
+        }
+      }
+    ]);
 
     res.json({
-      stats: stats[0] || {
-        totalUploads: 0,
-        totalStorage: 0,
-        completedUploads: 0,
-        failedUploads: 0
-      },
-      recentUploads
+      stats: {
+        ...stats,
+        recentActivity: formattedRecentActivity,
+        storageDistribution
+      }
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });

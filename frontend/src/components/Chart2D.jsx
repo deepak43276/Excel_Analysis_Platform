@@ -56,6 +56,15 @@ const DEFAULT_BORDERS = [
 export default function Chart2D({ type, data, xAxis, yAxis }) {
   const chartRef = useRef(null);
 
+  // Show a message if data is missing or empty
+  if (!Array.isArray(data) || data.length === 0) {
+    return (
+      <div className="p-4 bg-white rounded-lg shadow text-center text-gray-500">
+        No data available for this chart.
+      </div>
+    );
+  }
+
   const chartData = {
     labels: data.map(item => item[xAxis]),
     datasets: [

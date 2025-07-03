@@ -21,7 +21,8 @@ export default function UserDashboard() {
   const [stats, setStats] = useState({
     totalUploads: 0,
     totalStorage: 0,
-    recentActivity: []
+    recentActivity: [],
+    storageDistribution: []
   });
 
   useEffect(() => {
