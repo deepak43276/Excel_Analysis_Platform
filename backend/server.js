@@ -15,13 +15,31 @@ connectDB();
 const app = express();
 
 // CORS configuration
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://excel-analytics-frontend.vercel.app",
+  "https://excel-analytics-frontend-git-main.vercel.app",
+  "https://excel-analytics-frontend-git-develop.vercel.app",
+  "https://excel-analysis-platform-wine.vercel.app"
+];
+
+// Add environment variable for additional origins
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://excel-analytics-frontend.vercel.app",
-    "https://excel-analytics-frontend-git-main.vercel.app",
-    "https://excel-analytics-frontend-git-develop.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

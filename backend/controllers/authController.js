@@ -61,6 +61,8 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log('Login attempt for email:', email);
+    
     // Validation
     if (!email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -69,12 +71,14 @@ export const login = async (req, res) => {
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found for email:', email);
       return res.status(400).json({ msg: "Invalid email or password" });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Password mismatch for email:', email);
       return res.status(400).json({ msg: "Invalid email or password" });
     }
 
@@ -85,13 +89,17 @@ export const login = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    // Set cookie
-    res.cookie("token", token, {
+    // Set cookie with more flexible settings for production
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "none", // Required for cross-origin requests
+      secure: true // Required for sameSite: "none"
+    };
+
+    res.cookie("token", token, cookieOptions);
+
+    console.log('Login successful for user:', user.username);
 
     // Send response with both token and user data
     res.json({
@@ -117,8 +125,8 @@ export const logout = async (req, res) => {
     res.cookie("token", "", {
       httpOnly: true,
       expires: new Date(0),
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict"
+      secure: true,
+      sameSite: "none"
     });
 
     res.json({ msg: "Logged out successfully" });
