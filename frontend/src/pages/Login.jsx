@@ -40,7 +40,7 @@ export default function Login() {
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">Welcome!</h2>
             <h3 className="text-lg sm:text-xl text-blue-200 font-semibold mb-3 lg:mb-4">To Your Analytics Platform</h3>
             <p className="text-sm sm:text-base text-blue-100 mb-6 lg:mb-8">
-              Upload, analyze, and visualize your Excel data with AI-powered insights. Unlock the full potential of your spreadsheets!
+              Upload, analyze, and visualize your Excel data . Unlock the full potential of your spreadsheets!
             </p>
           </div>
         </div>
@@ -94,13 +94,7 @@ export default function Login() {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-gray-600 space-y-2 sm:space-y-0">
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Remember me
-              </label>
-              <a href="#" className="hover:underline text-blue-600">Forgot password?</a>
-            </div>
+          
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
