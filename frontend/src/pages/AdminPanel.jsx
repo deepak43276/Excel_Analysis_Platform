@@ -27,8 +27,6 @@ const AdminPanel = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Log before fetching uploads
-      // console.log('Attempting to fetch admin uploads...');
       try {
         const [statsRes, usersRes, uploadsRes] = await Promise.all([
           api.get('/admin/stats'),
@@ -39,7 +37,6 @@ const AdminPanel = () => {
         setUsers(usersRes.data);
         setUploads(uploadsRes.data); // The backend returns the array directly
       } catch (error) {
-        console.error('Error fetching data:', error);
         if (error.response?.status === 403) {
           navigate('/login');
         }
@@ -149,32 +146,32 @@ const AdminPanel = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Mobile Sidebar Toggle */}
-      <div className="lg:hidden fixed top-0 left-0 z-20 p-4">
+      <div className="lg:hidden fixed top-0 left-0 z-20 p-3 sm:p-4">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="text-gray-600 hover:text-gray-900 focus:outline-none"
         >
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
 
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-10 w-64 bg-white shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
+      <div className={`fixed inset-y-0 left-0 z-10 w-56 sm:w-64 bg-white shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out`}>
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       </div>
 
       {/* Main Content */}
       <div className="lg:ml-64">
         <Navbar />
-        <main className="p-4 md:p-6 lg:p-8">
+        <main className="p-3 sm:p-4 md:p-6 lg:p-8">
           {/* Tab Navigation */}
-          <div className="mb-6 overflow-x-auto">
-            <nav className="flex space-x-2 md:space-x-4">
+          <div className="mb-4 sm:mb-6 overflow-x-auto">
+            <nav className="flex space-x-1 sm:space-x-2 md:space-x-4">
               <button
                 onClick={() => setActiveTab('dashboard')}
-                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-sm font-medium whitespace-nowrap ${
+                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'dashboard'
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
@@ -184,7 +181,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={() => setActiveTab('users')}
-                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-sm font-medium whitespace-nowrap ${
+                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'users'
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
@@ -194,7 +191,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={() => setActiveTab('files')}
-                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-sm font-medium whitespace-nowrap ${
+                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'files'
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
@@ -204,7 +201,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={() => setActiveTab('uploads')}
-                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-sm font-medium whitespace-nowrap ${
+                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'uploads'
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
@@ -214,7 +211,7 @@ const AdminPanel = () => {
               </button>
               <button
                 onClick={() => setActiveTab('activity')}
-                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-sm font-medium whitespace-nowrap ${
+                className={`px-2 py-1 md:px-3 md:py-2 rounded-md text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'activity'
                     ? 'bg-blue-600 text-white'
                     : 'text-gray-700 hover:bg-gray-200'
@@ -227,19 +224,19 @@ const AdminPanel = () => {
 
           {/* Dashboard Tab */}
           {activeTab === 'dashboard' && stats && (
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {/* Stats Cards */}
-                <div className="bg-white rounded-lg shadow p-4 md:p-6">
+                <div className="bg-white rounded-lg shadow p-3 sm:p-4 md:p-6">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                       </svg>
                     </div>
-                    <div className="ml-4">
-                      <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                      <dd className="text-lg font-medium text-gray-900">{stats.totalUsers}</dd>
+                    <div className="ml-3 sm:ml-4">
+                      <dt className="text-xs sm:text-sm font-medium text-gray-500 truncate">Total Users</dt>
+                      <dd className="text-base sm:text-lg font-medium text-gray-900">{stats.totalUsers}</dd>
                     </div>
                   </div>
                 </div>

@@ -33,10 +33,9 @@ export default function UserDashboard() {
       try {
         const response = await fetch('/api/stats');
         const data = await response.json();
-        console.log('Fetched user stats:', data);
         setStats(data.stats || { totalUploads: 0, totalStorage: 0, completedUploads: 0, failedUploads: 0 });
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        // Handle error silently
       }
     };
     fetchStats();
@@ -49,7 +48,7 @@ export default function UserDashboard() {
         const userSettings = await settingsService.getSettings();
         setLocalSettings(userSettings);
       } catch (error) {
-        console.error('Error loading settings:', error);
+        // Handle error silently
       }
     };
     loadSettings();
@@ -75,7 +74,6 @@ export default function UserDashboard() {
       alert('Settings saved successfully!');
     } catch (error) {
       setSaveError('Failed to save settings. Please try again.');
-      console.error('Error saving settings:', error);
     } finally {
       setIsSaving(false);
     }
@@ -90,7 +88,7 @@ export default function UserDashboard() {
         // Show success message
         alert('Settings reset to default!');
       } catch (error) {
-        console.error('Error resetting settings:', error);
+        // Handle error silently
       }
     }
   };
@@ -119,32 +117,32 @@ export default function UserDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto py-4 sm:py-6 px-3 sm:px-6 lg:px-8">
         {/* Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to Your Dashboard</h1>
-          <p className="mt-2 text-gray-600">Upload, analyze, and visualize your data with ease.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome to Your Dashboard</h1>
+          <p className="mt-2 text-sm sm:text-base text-gray-600">Upload, analyze, and visualize your data with ease.</p>
         </motion.div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Upload className="h-6 w-6 text-blue-600" />
+              <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
+                <Upload className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Uploads</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats?.totalUploads || 0}</p>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-500">Total Uploads</p>
+                <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats?.totalUploads || 0}</p>
               </div>
             </div>
           </motion.div>
@@ -153,15 +151,15 @@ export default function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Download className="h-6 w-6 text-green-600" />
+              <div className="p-2 sm:p-3 bg-green-100 rounded-lg">
+                <Download className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Storage Used</p>
-                <p className="text-2xl font-semibold text-gray-900">{stats?.totalStorage || 0} MB</p>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-500">Storage Used</p>
+                <p className="text-lg sm:text-2xl font-semibold text-gray-900">{stats?.totalStorage || 0} MB</p>
               </div>
             </div>
           </motion.div>
@@ -170,15 +168,15 @@ export default function UserDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl shadow-sm p-4 sm:p-6 hover:shadow-md transition-shadow"
           >
             <div className="flex items-center">
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <User className="h-6 w-6 text-purple-600" />
+              <div className="p-2 sm:p-3 bg-purple-100 rounded-lg">
+                <User className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Account Status</p>
-                <p className="text-2xl font-semibold text-gray-900">Active</p>
+              <div className="ml-3 sm:ml-4">
+                <p className="text-xs sm:text-sm font-medium text-gray-500">Account Status</p>
+                <p className="text-lg sm:text-2xl font-semibold text-gray-900">Active</p>
               </div>
             </div>
           </motion.div>
@@ -188,56 +186,56 @@ export default function UserDashboard() {
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {/* Tab Navigation */}
           <div className="border-b border-gray-200">
-            <nav className="flex -mb-px">
+            <nav className="flex -mb-px overflow-x-auto">
               <button
                 onClick={() => setActiveTab('upload')}
-                className={`flex items-center px-6 py-4 text-sm font-medium ${
+                className={`flex items-center px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'upload'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <Upload className="h-5 w-5 mr-2" />
+                <Upload className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                 Upload
               </button>
               <button
                 onClick={() => setActiveTab('history')}
-                className={`flex items-center px-6 py-4 text-sm font-medium ${
+                className={`flex items-center px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'history'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <BarChart2 className="h-5 w-5 mr-2" />
+                <BarChart2 className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                 History
               </button>
               <button
                 onClick={() => setActiveTab('analytics')}
-                className={`flex items-center px-6 py-4 text-sm font-medium ${
+                className={`flex items-center px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'analytics'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <TrendingUp className="h-5 w-5 mr-2" />
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                 Analytics
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
-                className={`flex items-center px-6 py-4 text-sm font-medium ${
+                className={`flex items-center px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-medium whitespace-nowrap ${
                   activeTab === 'settings'
                     ? 'border-b-2 border-blue-500 text-blue-600'
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <Settings className="h-5 w-5 mr-2" />
+                <Settings className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
                 Settings
               </button>
             </nav>
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === 'upload' && (
               <motion.div
                 initial={{ opacity: 0 }}

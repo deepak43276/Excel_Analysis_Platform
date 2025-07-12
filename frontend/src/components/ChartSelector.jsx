@@ -53,7 +53,7 @@ export default function ChartSelector({ columns, onSelect, data }) {
   };
 
   return (
-    <div className="w-full px-2 py-16 sm:px-0">
+    <div className="w-full px-2 py-8 sm:py-16 sm:px-0">
       <Tab.Group>
         <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
           {Object.keys(chartCategories).map((category) => (
@@ -61,7 +61,7 @@ export default function ChartSelector({ columns, onSelect, data }) {
               key={category}
               className={({ selected }) =>
                 classNames(
-                  'w-full rounded-lg py-2.5 text-sm font-medium leading-5',
+                  'w-full rounded-lg py-2 sm:py-2.5 text-xs sm:text-sm font-medium leading-5',
                   'ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2',
                   selected
                     ? 'bg-white shadow text-blue-700'
@@ -77,10 +77,10 @@ export default function ChartSelector({ columns, onSelect, data }) {
           {Object.values(chartCategories).map((charts, idx) => (
             <Tab.Panel
               key={idx}
-              className="rounded-xl bg-white p-3"
+              className="rounded-xl bg-white p-2 sm:p-3"
             >
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                   {charts.map((chart) => (
                     <button
                       key={chart.id}
@@ -91,7 +91,7 @@ export default function ChartSelector({ columns, onSelect, data }) {
                         }
                       }}
                       className={classNames(
-                        'p-4 rounded-lg text-left',
+                        'p-2 sm:p-4 rounded-lg text-left text-xs sm:text-sm',
                         chartType === chart.id
                           ? 'bg-blue-100 border-2 border-blue-500'
                           : 'bg-gray-50 hover:bg-gray-100'
@@ -102,13 +102,13 @@ export default function ChartSelector({ columns, onSelect, data }) {
                   ))}
                 </div>
 
-                <div className="space-y-4 mt-4">
+                <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">X Axis</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700">X Axis</label>
                     <select
                       value={xAxis}
                       onChange={(e) => setXAxis(e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xs sm:text-sm"
                     >
                       <option value="">Select X Axis</option>
                       {columns.map(column => (
@@ -118,11 +118,11 @@ export default function ChartSelector({ columns, onSelect, data }) {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Y Axis</label>
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700">Y Axis</label>
                     <select
                       value={yAxis}
                       onChange={(e) => setYAxis(e.target.value)}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xs sm:text-sm"
                     >
                       <option value="">Select Y Axis</option>
                       {columns.map(column => (
@@ -133,11 +133,11 @@ export default function ChartSelector({ columns, onSelect, data }) {
 
                   {(chartType === '3d-column' || chartType === '3d-scatter') && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Z Axis</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700">Z Axis</label>
                       <select
                         value={zAxis}
                         onChange={(e) => setZAxis(e.target.value)}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-xs sm:text-sm"
                       >
                         <option value="">Select Z Axis</option>
                         {columns.map(column => (
@@ -148,25 +148,25 @@ export default function ChartSelector({ columns, onSelect, data }) {
                   )}
 
                   {chartType === 'summary' && yAxis && (
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="text-lg font-medium mb-2">Data Summary</h3>
+                    <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                      <h3 className="text-base sm:text-lg font-medium mb-2">Data Summary</h3>
                       {generateDataSummary() && (
-                        <dl className="grid grid-cols-2 gap-4">
+                        <dl className="grid grid-cols-2 gap-2 sm:gap-4">
                           <div>
-                            <dt className="text-sm text-gray-500">Count</dt>
-                            <dd className="text-lg font-medium">{generateDataSummary().count}</dd>
+                            <dt className="text-xs sm:text-sm text-gray-500">Count</dt>
+                            <dd className="text-sm sm:text-lg font-medium">{generateDataSummary().count}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm text-gray-500">Sum</dt>
-                            <dd className="text-lg font-medium">{generateDataSummary().sum}</dd>
+                            <dt className="text-xs sm:text-sm text-gray-500">Sum</dt>
+                            <dd className="text-sm sm:text-lg font-medium">{generateDataSummary().sum}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm text-gray-500">Average</dt>
-                            <dd className="text-lg font-medium">{generateDataSummary().average}</dd>
+                            <dt className="text-xs sm:text-sm text-gray-500">Average</dt>
+                            <dd className="text-sm sm:text-lg font-medium">{generateDataSummary().average}</dd>
                           </div>
                           <div>
-                            <dt className="text-sm text-gray-500">Range</dt>
-                            <dd className="text-lg font-medium">
+                            <dt className="text-xs sm:text-sm text-gray-500">Range</dt>
+                            <dd className="text-sm sm:text-lg font-medium">
                               {generateDataSummary().min} - {generateDataSummary().max}
                             </dd>
                           </div>
@@ -178,7 +178,7 @@ export default function ChartSelector({ columns, onSelect, data }) {
                   <button
                     onClick={handleSubmit}
                     disabled={(!xAxis || !yAxis) || ((chartType === '3d-column' || chartType === '3d-scatter') && !zAxis)}
-                    className="w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="w-full px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                   >
                     Generate Visualization
                   </button>

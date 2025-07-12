@@ -53,7 +53,6 @@ export default function FileUpload({ onUploadSuccess }) {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Upload file failed");
-      console.log(error);
     }
   };
 
@@ -82,32 +81,32 @@ export default function FileUpload({ onUploadSuccess }) {
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-100 text-gray-800 px-6">
-        <div className="md:w-1/2 text-center space-y-4">
-          <h1 className="text-4xl font-bold">Upload Your Excel File</h1>
-          <p className="text-lg text-gray-600">Start analyzing your data by uploading an Excel spreadsheet.</p>
+      <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-100 text-gray-800 px-4 sm:px-6">
+        <div className="w-full lg:w-1/2 text-center space-y-3 sm:space-y-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Upload Your Excel File</h1>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">Start analyzing your data by uploading an Excel spreadsheet.</p>
         </div>
 
         <div
-          className="md:w-1/2 mt-8 md:mt-0 flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-6 bg-white shadow-lg"
+          className="w-full lg:w-1/2 mt-6 lg:mt-0 flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-6 bg-white shadow-lg"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
           <label className="flex flex-col items-center cursor-pointer">
-            <FileUp className='text-green-500 text-[10rem] h-18 w-18' />
+            <FileUp className='text-green-500 h-12 w-12 sm:h-16 sm:w-16 lg:h-18 lg:w-18' />
             <input
               type="file"
               accept=".xlsx"
               onChange={handleFileChange}
               className="hidden"
             />
-            <p className="text-gray-600">Drag and drop a file here, or click to select a file</p>
+            <p className="text-xs sm:text-sm lg:text-base text-gray-600 text-center">Drag and drop a file here, or click to select a file</p>
           </label>
         </div>
       </div>
 
       {excelData.length > 0 && (
-        <div ref={chartRef} className="mt-8 px-6 py-8 bg-white shadow rounded-lg">
+        <div ref={chartRef} className="mt-6 sm:mt-8 px-4 sm:px-6 py-6 sm:py-8 bg-white shadow rounded-lg">
           <ChartSelector
             columns={headers}
             onSelect={setChartConfig}
@@ -130,7 +129,7 @@ export default function FileUpload({ onUploadSuccess }) {
               />
             )
           ) : (
-            <div className="text-center text-gray-500 mt-4">
+            <div className="text-center text-gray-500 mt-4 text-sm sm:text-base">
               Select chart type and axes to generate visualization
             </div>
           )}

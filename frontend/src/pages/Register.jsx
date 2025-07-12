@@ -26,7 +26,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0 bg-blue-700">
         {/* <img 
@@ -42,21 +42,21 @@ export default function Register() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10 mx-4"
+        className="w-full max-w-sm sm:max-w-md relative z-10 mx-auto"
       >
-        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-white/20">
+        <div className="bg-white/90 backdrop-blur-sm p-6 sm:p-8 rounded-xl shadow-2xl border border-white/20">
           {/* Logo/Header */}
           <motion.div 
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="flex justify-center mb-6"
+            className="flex justify-center mb-4 sm:mb-6"
           >
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
-              className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white text-2xl font-bold shadow-lg"
+              className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center text-white text-xl sm:text-2xl font-bold shadow-lg"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </motion.div>
@@ -66,17 +66,17 @@ export default function Register() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-2xl font-bold text-center mb-6 text-gray-800"
+            className="text-xl sm:text-2xl font-bold text-center mb-4 sm:mb-6 text-gray-800"
           >
             Join Our Platform
           </motion.h2>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-100"
+                className="bg-red-50 text-red-600 p-2 sm:p-3 rounded-lg text-xs sm:text-sm border border-red-100"
               >
                 {error}
               </motion.div>
@@ -86,16 +86,16 @@ export default function Register() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="space-y-2"
+              className="space-y-1 sm:space-y-2"
             >
-              <label className="text-sm font-medium text-gray-600">Username</label>
+              <label className="text-xs sm:text-sm font-medium text-gray-600">Username</label>
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileFocus={{ scale: 1.02 }}
                 className="relative"
               >
                 <input
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80"
+                  className="w-full p-2 sm:p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80 text-sm sm:text-base"
                   type="text"
                   name="username"
                   placeholder="Enter your username"
@@ -115,16 +115,16 @@ export default function Register() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="space-y-2"
+              className="space-y-1 sm:space-y-2"
             >
-              <label className="text-sm font-medium text-gray-600">Email</label>
+              <label className="text-xs sm:text-sm font-medium text-gray-600">Email</label>
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileFocus={{ scale: 1.02 }}
                 className="relative"
               >
                 <input
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80"
+                  className="w-full p-2 sm:p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80 text-sm sm:text-base"
                   type="email"
                   name="email"
                   placeholder="Enter your email"
@@ -144,16 +144,16 @@ export default function Register() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
-              className="space-y-2"
+              className="space-y-1 sm:space-y-2"
             >
-              <label className="text-sm font-medium text-gray-600">Password</label>
+              <label className="text-xs sm:text-sm font-medium text-gray-600">Password</label>
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileFocus={{ scale: 1.02 }}
                 className="relative"
               >
                 <input
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80"
+                  className="w-full p-2 sm:p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white/80 text-sm sm:text-base"
                   type="password"
                   name="password"
                   placeholder="Enter your password"
@@ -170,16 +170,16 @@ export default function Register() {
             </motion.div>
 
             <div>
-              <label className="block text-gray-700 mb-1">Admin Code (Optional)</label>
+              <label className="block text-gray-700 mb-1 text-xs sm:text-sm">Admin Code (Optional)</label>
               <input
-                className="w-full p-3 border-b-2 border-gray-300 focus:border-blue-600 bg-transparent outline-none transition"
+                className="w-full p-2 sm:p-3 border-b-2 border-gray-300 focus:border-blue-600 bg-transparent outline-none transition text-sm sm:text-base"
                 type="password"
                 name="adminCode"
                 placeholder="Enter admin code if you have one"
                 value={form.adminCode}
                 onChange={handleChange}
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm text-gray-500 mt-1">
                 Leave this empty for a regular user account
               </p>
             </div>
@@ -193,7 +193,7 @@ export default function Register() {
                 boxShadow: "0 5px 15px rgba(99, 102, 241, 0.4)"
               }}
               whileTap={{ scale: 0.98 }}
-              className={`w-full p-3 rounded-lg text-white font-medium transition-all ${
+              className={`w-full p-2 sm:p-3 rounded-lg text-white font-medium transition-all text-sm sm:text-base ${
                 loading
                   ? "bg-gray-400"
                   : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
@@ -206,7 +206,7 @@ export default function Register() {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                    className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full"
                   />
                 </div>
               ) : (
@@ -218,9 +218,9 @@ export default function Register() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
-              className="text-center pt-4"
+              className="text-center pt-3 sm:pt-4"
             >
-              <p className="text-gray-600 text-sm">
+              <p className="text-gray-600 text-xs sm:text-sm">
                 Already have an account?{" "}
                 <motion.span 
                   whileHover={{ scale: 1.05 }}

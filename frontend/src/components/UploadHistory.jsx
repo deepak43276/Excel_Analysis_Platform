@@ -18,7 +18,6 @@ export default function UploadHistory({ refresh }) {
       const upload = await dispatch(getUploadById(id)).unwrap();
       
       if (!upload.analysisResults?.data || !upload.analysisResults?.columns) {
-        console.error('No data available for this upload');
         return;
       }
 
@@ -37,7 +36,7 @@ export default function UploadHistory({ refresh }) {
         }
       });
     } catch (error) {
-      console.error('Error fetching upload:', error);
+      // Handle error silently
     }
   };
 
