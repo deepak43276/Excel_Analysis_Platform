@@ -29,11 +29,9 @@ export const protect = async (req, res, next) => {
       req.user = user;
       next();
     } catch (error) {
-      console.error('Token verification error:', error);
       return res.status(401).json({ msg: "Not authorized, token failed" });
     }
   } catch (error) {
-    console.error('Auth middleware error:', error);
     res.status(500).json({ msg: "Server error" });
   }
 };

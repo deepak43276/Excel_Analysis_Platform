@@ -21,7 +21,6 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ msg: 'Not authorized, token failed' });
     }
   } catch (error) {
-    console.error('Auth middleware error:', error);
     res.status(500).json({ msg: 'Server error' });
   }
 };
@@ -36,7 +35,6 @@ export const isAdmin = async (req, res, next) => {
       }
     });
   } catch (error) {
-    console.error('Admin middleware error:', error);
     res.status(500).json({ msg: 'Server error' });
   }
 }; 

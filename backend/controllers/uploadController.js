@@ -51,15 +51,13 @@ export const uploadFile = async (req, res) => {
             } catch (err) {
               // Don't throw error if file deletion fails
             }
-          } catch (error) {
-            console.error('Error saving upload results:', error);
-            upload.status = 'failed';
-            upload.error = error.message;
-            await upload.save();
-          }
+              } catch (error) {
+      upload.status = 'failed';
+      upload.error = error.message;
+      await upload.save();
+    }
         })
         .catch(async (error) => {
-          console.error(`Upload ${upload._id} processing failed:`, error);
           upload.status = 'failed';
           upload.error = error.message;
           await upload.save();
@@ -71,7 +69,6 @@ export const uploadFile = async (req, res) => {
           }
         });
     } catch (processError) {
-      console.error('Synchronous error during processExcelFile invocation:', processError);
       upload.status = 'failed';
       upload.error = processError.message;
       await upload.save();
@@ -88,7 +85,6 @@ export const uploadFile = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Upload controller error:', error);
     res.status(500).json({ msg: error.message || 'Upload failed' });
   }
 };

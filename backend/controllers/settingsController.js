@@ -9,7 +9,6 @@ export const getSettings = async (req, res) => {
     }
     res.json(user.settings || {});
   } catch (error) {
-    console.error('Error in getSettings:', error);
     res.status(500).json({ message: 'Failed to fetch settings' });
   }
 };
@@ -38,10 +37,8 @@ export const saveSettings = async (req, res) => {
     user.settings = req.body;
     await user.save();
 
-    console.log('Settings saved successfully for user:', user._id);
     res.json(user.settings);
   } catch (error) {
-    console.error('Error in saveSettings:', error);
     res.status(500).json({ message: 'Failed to save settings' });
   }
 };
@@ -82,7 +79,6 @@ export const updateSetting = async (req, res) => {
     
     res.json(user.settings);
   } catch (error) {
-    console.error('Error in updateSetting:', error);
     res.status(500).json({ message: 'Failed to update setting' });
   }
 };
@@ -128,10 +124,8 @@ export const resetSettings = async (req, res) => {
     };
     await user.save();
     
-    console.log('Settings reset to default for user:', user._id);
     res.json(user.settings);
   } catch (error) {
-    console.error('Error in resetSettings:', error);
     res.status(500).json({ message: 'Failed to reset settings' });
   }
 }; 

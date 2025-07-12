@@ -39,13 +39,12 @@ export const processExcelFile = async (filePath, analysisType) => {
     // but keeping it here for now as per existing logic, with a console log for clarity
     try {
       await fs.unlink(filePath);
-    } catch (unlinkError) {
-      console.error('Error deleting temporary file:', unlinkError);
-    }
+            } catch (unlinkError) {
+          // Handle file deletion error silently
+        }
 
     return finalResults;
   } catch (error) {
-    console.error('Error during Excel file processing:', error);
     // Re-throw the error so the caller can catch and handle it (e.g., set upload status to failed)
     throw error;
   }

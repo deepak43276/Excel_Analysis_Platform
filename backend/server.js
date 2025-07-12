@@ -36,7 +36,6 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -61,15 +60,6 @@ app.get("/", (req, res) => res.send("API running"));
 
 // Error logging middleware
 app.use((err, req, res, next) => {
-  console.error('Error details:', {
-    message: err.message,
-    stack: err.stack,
-    path: req.path,
-    method: req.method,
-    body: req.body,
-    headers: req.headers
-  });
-  
   res.status(err.status || 500).json({
     message: err.message || 'Internal server error',
     path: req.path,

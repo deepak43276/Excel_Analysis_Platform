@@ -44,7 +44,6 @@ router.post('/uploads/upload', upload.single('file'), async (req, res, next) => 
     }
     await uploadController.uploadFile(req, res, next);
   } catch (error) {
-    console.error('Upload error:', error);
     res.status(500).json({ msg: error.message || 'Upload failed' });
   }
 });

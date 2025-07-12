@@ -50,7 +50,6 @@ export const register = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Registration error:", error);
     res.status(500).json({ 
       msg: error.message || "Registration failed. Please try again."
     });
@@ -61,8 +60,6 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     
-    console.log('Login attempt for email:', email);
-    
     // Validation
     if (!email || !password) {
       return res.status(400).json({ msg: "All fields are required" });
@@ -71,14 +68,12 @@ export const login = async (req, res) => {
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
-      console.log('User not found for email:', email);
       return res.status(400).json({ msg: "Invalid email or password" });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.log('Password mismatch for email:', email);
       return res.status(400).json({ msg: "Invalid email or password" });
     }
 
@@ -99,8 +94,6 @@ export const login = async (req, res) => {
 
     res.cookie("token", token, cookieOptions);
 
-    console.log('Login successful for user:', user.username);
-
     // Send response with both token and user data
     res.json({
       token,
@@ -112,7 +105,6 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Login error:", error);
     res.status(500).json({ 
       msg: error.message || "Login failed. Please try again."
     });
@@ -131,7 +123,6 @@ export const logout = async (req, res) => {
 
     res.json({ msg: "Logged out successfully" });
   } catch (error) {
-    console.error("Logout error:", error);
     res.status(500).json({ 
       msg: error.message || "Logout failed. Please try again."
     });
